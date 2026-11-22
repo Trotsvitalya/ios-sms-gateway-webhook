@@ -29,3 +29,6 @@ targets:
         excludes:
           - "Info.plist"
           - "App.entitlements"
+    settings:
+      base:
+        ASSETCATALOG_COMPILER_APPICON_NAME: AppIcon

@@ -1,62 +1,77 @@
-# SMS Gateway Webhook для iOS 15 – 16 (TrollStore)
+# SMS Gateway for iOS (TrollStore)
 
-iOS-аналог популярного Android-додатку [android_income_sms_gateway_webhook](https://github.com/bogkonstantin/android_income_sms_gateway_webhook).
+[![Build & Release IPA](https://github.com/Trotsvitalya/ios-sms-gateway-webhook/actions/workflows/build.yml/badge.svg)](https://github.com/Trotsvitalya/ios-sms-gateway-webhook/actions/workflows/build.yml)
+[![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
+[![iOS 15-16](https://img.shields.io/badge/iOS-15--16-orange.svg)](https://github.com/Trotsvitalya/ios-sms-gateway-webhook)
+[![TrollStore](https://img.shields.io/badge/Platform-TrollStore-green.svg)](https://github.com/opa334/TrollStore)
 
-Додаток працює у фоновому режимі 24/7, автоматично перехоплює вхідні SMS та iMessage з системної бази iOS `/var/mobile/Library/SMS/sms.db` та миттєво відправляє їх через HTTP POST на ваш Webhook URL.
+An open-source, background SMS-to-Webhook forwarding utility for iOS 15.0 – 16.6.1 with TrollStore.
 
 ---
 
-## 🚀 Основні можливості
+## 🌐 Language / Мова
+* [English](#english)
+* [Українська](#українська)
 
-* **Повна підтримка правил (Forwarding Rules):**
-  * Фільтрація за номером відправника або альфа-іменем (або `*` для всіх повідомлень).
+---
+
+<a name="english"></a>
+## 🇬🇧 English
+
+### Overview
+This application monitors incoming SMS and iMessage events in real-time from the local iOS database (`/var/mobile/Library/SMS/sms.db`) and forwards them to your configured HTTP(S) Webhooks or Telegram Bot endpoints.
+
+### Features
+* **Flexible Forwarding Rules:**
+  * Sender filter (specific number, sender name, or `*` for all messages).
+  * Regular Expression (**RegEx**) matching for senders.
+  * Message body substring filtering.
+* **Custom Webhook Payloads:**
+  * Configurable JSON templates (`%from%`, `%text%`, `%sentStamp%`, `%receivedStamp%`, `%sim%`).
+  * Custom HTTP headers support (e.g., `Authorization: Bearer <token>`).
+* **Persistent Background Execution:**
+  * Runs 24/7 without being suspended by iOS memory management.
+* **Live History & Delivery Logs:**
+  * Real-time inspection of forwarded SMS and HTTP response codes.
+* **One-tap Test Dispatch:**
+  * Verify your webhook destination with dummy data.
+
+### Installation via TrollStore
+1. Download `SMSGateway.ipa` from the [Latest Release](https://github.com/Trotsvitalya/ios-sms-gateway-webhook/releases).
+2. Open the file on your device and choose **Share → TrollStore**.
+3. Tap **Install**.
+4. Launch the app, verify the database indicator is **Connected**, and toggle **Service Active**.
+
+---
+
+<a name="українська"></a>
+## 🇺🇦 Українська
+
+### Огляд
+Додаток відстежує вхідні SMS та iMessage у реальному часі безпосередньо з системної бази (`/var/mobile/Library/SMS/sms.db`) та миттєво пересилає їх на ваші HTTP(S) вебхуки або в Telegram-бота.
+
+### Основні можливості
+* **Гнучкі правила пересилання:**
+  * Фільтрація за номером, назвою або `*` (для всіх).
   * Підтримка регулярних виразів (**RegEx**).
-  * Фільтр за змістом тексту SMS.
-* **Кастомізація Webhook:**
-  * Довільний JSON-шаблон тіла запиту (змінні `%from%`, `%text%`, `%sentStamp%`, `%receivedStamp%`, `%sim%`).
-  * Підтримка кастомних HTTP-заголовків (наприклад, токенів авторизації `Authorization: Bearer ...`).
-* **Фонова робота (24/7):**
-  * Працює у фоні під TrollStore без ризику бути закритим системою.
-* **Журнал подій (Live Logs):**
-  * Відображення отриманих SMS та статусів доставки (HTTP 200, помилки з'єднання).
-* **Тестування:**
-  * Кнопка швидкого надсилання тестового SMS-пакета на вибраний сервер.
-* **Сумісність з iOS 16:**
-  * Підтримка вилучення тексту з блобів `attributedBody`.
+  * Фільтрація за текстом повідомлення.
+* **Налаштування Webhook:**
+  * Довільні JSON-шаблони тіла запиту.
+  * Підтримка кастомних HTTP-заголовків.
+* **Безперервна робота 24/7:**
+  * Працює у фоновому режимі під TrollStore без вивантаження системою.
+* **Журнал та перевірка доставки:**
+  * Відображення отриманих повідомлень та HTTP-статусів відповіді сервера.
+* **Тестове відправлення:**
+  * Перевірка підключення до Telegram або Webhook в один клік.
 
----
-
-## 📦 Формат JSON за замовчуванням
-
-Повністю сумісний з Android-версією:
-
-```json
-{
-  "from": "%from%",
-  "text": "%text%",
-  "sentStamp": %sentStamp%,
-  "receivedStamp": %receivedStamp%,
-  "sim": "%sim%"
-}
-```
-
----
-
-## 🛠️ Як зібрати `.ipa` без Mac (через GitHub Actions)
-
-Вам не потрібен комп'ютер Apple! Збірка відбувається автоматично у хмарі:
-
-1. Перейдіть у вкладку **Actions** у цьому репозиторії на GitHub.
-2. Виберіть воркфлоу **«Build IPA for TrollStore»**.
-3. Натисніть кнопку **«Run workflow»**.
-4. Зачекайте 2–3 хвилини:
-   * Готовий файл `SMSGateway.ipa` з'явиться в розділі **Releases** або в артефактах воркфлоу (**Artifacts**).
-
----
-
-## 📲 Встановлення на iPhone
-
-1. Завантажте `SMSGateway.ipa` через Safari або надішліть файл на телефон (через AirDrop / Telegram).
-2. Натисніть на файл і виберіть **«Поділитися» → TrollStore**.
+### Встановлення
+1. Завантажте `SMSGateway.ipa` з вкладки [Releases](https://github.com/Trotsvitalya/ios-sms-gateway-webhook/releases).
+2. Натисніть **Поділитися → TrollStore**.
 3. Натисніть **Install**.
-4. Відкрийте встановлений додаток **SMS Gateway**, налаштуйте Webhook URL і увімкніть перемикач **«Сервіс активний»**.
+4. Відкрийте додаток, додайте правило та увімкніть перемикач **Сервіс активний**.
+
+---
+
+## 📄 License
+This project is licensed under the [MIT License](LICENSE).

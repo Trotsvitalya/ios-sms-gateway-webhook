@@ -2,6 +2,7 @@ import SwiftUI
 
 struct RuleEditView: View {
     @Environment(\.presentationMode) var presentationMode
+    @ObservedObject var loc = LocalizationManager.shared
     @Binding var rule: ForwardingRule
     var isNew: Bool
     var onSave: (ForwardingRule) -> Void
@@ -17,34 +18,34 @@ struct RuleEditView: View {
     var body: some View {
         NavigationView {
             Form {
-                Section(header: Text("Відправник")) {
-                    TextField("Номер або * для всіх", text: $sender)
+                Section(header: Text(loc.localized(.senderSection))) {
+                    TextField(loc.localized(.senderPlaceholder), text: $sender)
                         .autocapitalization(.none)
                         .disableAutocorrection(true)
-                    Toggle("Регулярний вираз (RegEx)", isOn: $isSenderRegex)
+                    Toggle(loc.localized(.regexToggle), isOn: $isSenderRegex)
                 }
 
-                Section(header: Text("Фільтр тексту SMS (необов'язково)")) {
-                    TextField("Фільтр підрядка в SMS", text: $smsFilter)
+                Section(header: Text(loc.localized(.smsFilterSection))) {
+                    TextField(loc.localized(.smsFilterPlaceholder), text: $smsFilter)
                 }
 
-                Section(header: Text("Webhook URL")) {
+                Section(header: Text(loc.localized(.webhookUrlSection))) {
                     TextField("https://...", text: $url)
                         .keyboardType(.URL)
                         .autocapitalization(.none)
                         .disableAutocorrection(true)
                 }
 
-                Section(header: Text("JSON Шаблон")) {
+                Section(header: Text(loc.localized(.jsonTemplateSection))) {
                     TextEditor(text: $template)
                         .font(.system(.caption, design: .monospaced))
                         .frame(minHeight: 120)
-                    Text("Змінні: %from%, %text%, %sentStamp%, %receivedStamp%, %sim%")
+                    Text(loc.localized(.variablesHint))
                         .font(.footnote)
                         .foregroundColor(.secondary)
                 }
 
-                Section(header: Text("HTTP Заголовки (JSON)")) {
+                Section(header: Text(loc.localized(.headersSection))) {
                     TextEditor(text: $headers)
                         .font(.system(.caption, design: .monospaced))
                         .frame(minHeight: 60)
@@ -54,17 +55,17 @@ struct RuleEditView: View {
                     Button(action: testRule) {
                         HStack {
                             Image(systemName: "paperplane.fill")
-                            Text("Надіслати тестове SMS на цей URL")
+                            Text(loc.localized(.sendTestButton))
                         }
                     }
                 }
             }
-            .navigationTitle(isNew ? "Нове правило" : "Редагування правила")
+            .navigationTitle(isNew ? loc.localized(.ruleNewTitle) : loc.localized(.ruleEditTitle))
             .navigationBarItems(
-                leading: Button("Скасувати") {
+                leading: Button(loc.localized(.cancel)) {
                     presentationMode.wrappedValue.dismiss()
                 },
-                trailing: Button("Зберегти") {
+                trailing: Button(loc.localized(.save)) {
                     saveAndDismiss()
                 }.disabled(url.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty)
             )

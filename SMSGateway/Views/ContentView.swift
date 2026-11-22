@@ -2,6 +2,7 @@ import SwiftUI
 
 struct ContentView: View {
     @StateObject private var engine = GatewayEngine.shared
+    @ObservedObject private var loc = LocalizationManager.shared
     @State private var selectedTab = 0
     @State private var showingAddRule = false
     @State private var editingRule: ForwardingRule?
@@ -10,19 +11,19 @@ struct ContentView: View {
         TabView(selection: $selectedTab) {
             rulesTabView
                 .tabItem {
-                    Label("Правила", systemImage: "arrow.triangle.branch")
+                    Label(loc.localized(.tabRules), systemImage: "arrow.triangle.branch")
                 }
                 .tag(0)
 
             logsTabView
                 .tabItem {
-                    Label("Журнал", systemImage: "list.bullet.rectangle")
+                    Label(loc.localized(.tabLogs), systemImage: "list.bullet.rectangle")
                 }
                 .tag(1)
 
             settingsTabView
                 .tabItem {
-                    Label("Інфо", systemImage: "info.circle")
+                    Label(loc.localized(.tabInfo), systemImage: "info.circle")
                 }
                 .tag(2)
         }
@@ -38,10 +39,10 @@ struct ContentView: View {
                 Section {
                     HStack {
                         VStack(alignment: .leading, spacing: 4) {
-                            Text(engine.isRunning ? "Сервіс активний" : "Сервіс зупинено")
+                            Text(engine.isRunning ? loc.localized(.serviceActive) : loc.localized(.serviceStopped))
                                 .font(.headline)
                                 .foregroundColor(engine.isRunning ? .green : .secondary)
-                            Text(engine.isRunning ? "Відстежує вхідні SMS у фоні" : "Натисніть для запуску")
+                            Text(engine.isRunning ? loc.localized(.serviceRunningSubtitle) : loc.localized(.serviceTapToStart))
                                 .font(.caption)
                                 .foregroundColor(.secondary)
                         }
@@ -67,9 +68,9 @@ struct ContentView: View {
                             Image(systemName: "exclamationmark.triangle.fill")
                                 .foregroundColor(.orange)
                             VStack(alignment: .leading, spacing: 2) {
-                                Text("База SMS недоступна")
+                                Text(loc.localized(.dbUnavailableTitle))
                                     .font(.subheadline).bold()
-                                Text("Переконайтеся, що додаток встановлено через TrollStore з дозволом no-sandbox.")
+                                Text(loc.localized(.dbUnavailableMessage))
                                     .font(.caption)
                                     .foregroundColor(.secondary)
                             }
@@ -78,7 +79,7 @@ struct ContentView: View {
                 }
 
                 Section(header: HStack {
-                    Text("Правила пересилання")
+                    Text(loc.localized(.forwardingRulesHeader))
                     Spacer()
                     Button(action: { showingAddRule = true }) {
                         Image(systemName: "plus.circle.fill")
@@ -86,7 +87,7 @@ struct ContentView: View {
                     }
                 }) {
                     if engine.rules.isEmpty {
-                        Text("Немає налаштованих правил. Натисніть +, щоб додати.")
+                        Text(loc.localized(.noRules))
                             .font(.subheadline)
                             .foregroundColor(.secondary)
                             .padding(.vertical, 8)
@@ -162,7 +163,7 @@ struct ContentView: View {
         NavigationView {
             List {
                 if engine.logs.isEmpty {
-                    Text("Журнал порожній")
+                    Text(loc.localized(.logsEmpty))
                         .foregroundColor(.secondary)
                         .padding()
                 } else {
@@ -189,14 +190,13 @@ struct ContentView: View {
                                 Text(log.status)
                                     .font(.caption2).bold()
                                     .foregroundColor(log.isSuccess ? .green : .red)
-                            }
                         }
                         .padding(.vertical, 2)
                     }
                 }
             }
-            .navigationTitle("Журнал")
-            .navigationBarItems(trailing: Button("Очистити") {
+            .navigationTitle(loc.localized(.logsTitle))
+            .navigationBarItems(trailing: Button(loc.localized(.clearLogs)) {
                 engine.clearLogs()
             }.disabled(engine.logs.isEmpty))
         }
@@ -206,32 +206,41 @@ struct ContentView: View {
     private var settingsTabView: some View {
         NavigationView {
             List {
-                Section(header: Text("Про програму")) {
+                Section(header: Text(loc.localized(.languageHeader))) {
+                    Picker(loc.localized(.languageHeader), selection: $loc.currentLanguage) {
+                        ForEach(AppLanguage.allCases) { lang in
+                            Text(lang.displayName).tag(lang.rawValue)
+                        }
+                    }
+                    .pickerStyle(SegmentedPickerStyle())
+                }
+
+                Section(header: Text(loc.localized(.infoAboutHeader))) {
                     HStack {
-                        Text("Назва")
+                        Text(loc.localized(.appNameLabel))
                         Spacer()
-                        Text("SMS Gateway iOS")
+                        Text(loc.localized(.appNameValue))
                     }
                     HStack {
-                        Text("Сумісність")
+                        Text(loc.localized(.compatLabel))
                         Spacer()
-                        Text("iOS 15 – 16 (TrollStore)")
+                        Text(loc.localized(.compatValue))
                     }
                     HStack {
-                        Text("База даних")
+                        Text(loc.localized(.dbStatusLabel))
                         Spacer()
-                        Text(engine.isDbAvailable ? "Підключено" : "Недоступно")
+                        Text(engine.isDbAvailable ? loc.localized(.dbConnected) : loc.localized(.dbDisconnected))
                             .foregroundColor(engine.isDbAvailable ? .green : .red)
                     }
                 }
 
-                Section(header: Text("Як це працює")) {
-                    Text("Додаток працює у фоновому режимі та зчитує нові SMS напряму з бази даних iOS /var/mobile/Library/SMS/sms.db, після чого миттєво відправляє їх на вказаний Webhook URL.")
+                Section(header: Text(loc.localized(.howItWorksHeader))) {
+                    Text(loc.localized(.howItWorksDescription))
                         .font(.footnote)
                         .foregroundColor(.secondary)
                 }
             }
-            .navigationTitle("Інформація")
+            .navigationTitle(loc.localized(.tabInfo))
         }
     }
 
