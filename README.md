@@ -7,6 +7,13 @@
 
 An open-source, background SMS-to-Webhook forwarding utility for iOS 15.0 – 16.6.1 with TrollStore.
 
+<p align="center">
+  <img src="screenshots/rules.jpg" width="23%" alt="Rules Screen" />
+  <img src="screenshots/new_rule.jpg" width="23%" alt="New Rule Screen" />
+  <img src="screenshots/logs.jpg" width="23%" alt="Logs Screen" />
+  <img src="screenshots/info.jpg" width="23%" alt="Info Screen" />
+</p>
+
 ---
 
 ## 🌐 Language / Мова
