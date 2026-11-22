@@ -34,15 +34,14 @@ jobs:
             CODE_SIGN_IDENTITY="" \
             CODE_SIGNING_REQUIRED=NO \
             CODE_SIGNING_ALLOWED=NO \
-            AD_HOC_CODE_SIGNING_ALLOWED=YES \
-            2>&1 | tee build.log || (echo "=== XCODEBUILD FAILED ===" && tail -n 120 build.log && exit 1)
+            AD_HOC_CODE_SIGNING_ALLOWED=YES
 
       - name: Package & Sign IPA for TrollStore
         run: |
           mkdir -p Payload
-          cp -r build/Build/Products/Release-iphoneos/SMSGateway.app Payload/
+          cp -r build/Build/Products/Release-iphoneos/*.app Payload/SMSGateway.app
           ldid -SSMSGateway/App.entitlements Payload/SMSGateway.app/SMSGateway
-          zip -vr SMSGateway.ipa Payload/
+          zip -qry SMSGateway.ipa Payload
 
       - name: Upload IPA Artifact
         uses: actions/upload-artifact@v4

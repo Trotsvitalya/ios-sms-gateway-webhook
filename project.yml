@@ -7,7 +7,7 @@ options:
 
 settings:
   base:
-    PRODUCT_NAME: "SMS Gateway"
+    PRODUCT_NAME: "SMSGateway"
     PRODUCT_BUNDLE_IDENTIFIER: tech.bogomolov.iosincomingsmsgateway
     INFOPLIST_FILE: SMSGateway/Info.plist
     CODE_SIGN_ENTITLEMENTS: SMSGateway/App.entitlements
