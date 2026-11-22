@@ -25,6 +25,7 @@ jobs:
 
       - name: Build Application
         run: |
+          set -o pipefail
           xcodebuild -project SMSGateway.xcodeproj \
             -scheme SMSGateway \
             -configuration Release \
@@ -32,7 +33,9 @@ jobs:
             -derivedDataPath build \
             CODE_SIGN_IDENTITY="" \
             CODE_SIGNING_REQUIRED=NO \
-            CODE_SIGNING_ALLOWED=NO
+            CODE_SIGNING_ALLOWED=NO \
+            AD_HOC_CODE_SIGNING_ALLOWED=YES \
+            2>&1 | tee build.log || (echo "=== XCODEBUILD FAILED ===" && tail -n 120 build.log && exit 1)
 
       - name: Package & Sign IPA for TrollStore
         run: |

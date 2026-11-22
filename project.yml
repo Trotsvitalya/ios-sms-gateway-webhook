@@ -26,3 +26,6 @@ targets:
     platform: iOS
     sources:
       - path: SMSGateway
+        excludes:
+          - "Info.plist"
+          - "App.entitlements"

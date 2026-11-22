@@ -135,7 +135,7 @@ public class DatabaseManager {
     /// Розпакування тексту з attributedBody (для iOS 16)
     private func extractTextFromAttributedBody(_ data: Data) -> String? {
         // Спроба розпакувати через NSKeyedUnarchiver
-        if let unarchived = try? NSKeyedUnarchiver.unarchivedObject(ofClasses: [NSAttributedString.self, NSString.self], from: data) as? NSAttributedString {
+        if let unarchived = try? NSKeyedUnarchiver.unarchiveTopLevelObjectWithData(data) as? NSAttributedString {
             return unarchived.string
         }
 
