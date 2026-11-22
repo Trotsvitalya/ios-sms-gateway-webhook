@@ -27,7 +27,7 @@ This application monitors incoming SMS and iMessage events in real-time from the
   * Regular Expression (**RegEx**) matching for senders.
   * Message body substring filtering.
 * **Custom Webhook Payloads:**
-  * Configurable JSON templates (`%from%`, `%text%`, `%sentStamp%`, `%receivedStamp%`, `%sim%`).
+  * Configurable JSON templates (`%from%`, `%text%`, `%time%`, `%date%`, `%datetime%`, `%sentStamp%`, `%receivedStamp%`, `%sim%`).
   * Custom HTTP headers support (e.g., `Authorization: Bearer <token>`).
 * **Persistent Background Execution:**
   * Runs 24/7 without being suspended by iOS memory management.
@@ -56,7 +56,7 @@ This application monitors incoming SMS and iMessage events in real-time from the
   * Підтримка регулярних виразів (**RegEx**).
   * Фільтрація за текстом повідомлення.
 * **Налаштування Webhook:**
-  * Довільні JSON-шаблони тіла запиту.
+  * Довільні JSON-шаблони тіла запиту (змінні `%from%`, `%text%`, `%time%`, `%date%`, `%datetime%`, `%sentStamp%`, `%sim%`).
   * Підтримка кастомних HTTP-заголовків.
 * **Безперервна робота 24/7:**
   * Працює у фоновому режимі під TrollStore без вивантаження системою.

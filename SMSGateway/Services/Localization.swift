@@ -56,7 +56,7 @@ public class LocalizationManager: ObservableObject {
         case .smsFilterPlaceholder: return isUk ? "Фільтр підрядка в SMS" : "Substring match in SMS"
         case .webhookUrlSection: return isUk ? "Webhook URL" : "Webhook URL"
         case .jsonTemplateSection: return isUk ? "JSON Шаблон" : "JSON Template"
-        case .variablesHint: return isUk ? "Змінні: %from%, %text%, %sentStamp%, %receivedStamp%, %sim%" : "Variables: %from%, %text%, %sentStamp%, %receivedStamp%, %sim%"
+        case .variablesHint: return isUk ? "Змінні: %from%, %text%, %time%, %date%, %datetime%, %sentStamp%, %sim%" : "Variables: %from%, %text%, %time%, %date%, %datetime%, %sentStamp%, %sim%"
         case .headersSection: return isUk ? "HTTP Заголовки (JSON)" : "HTTP Headers (JSON)"
         case .sendTestButton: return isUk ? "Надіслати тестове SMS на цей URL" : "Send Test SMS to this URL"
         case .cancel: return isUk ? "Скасувати" : "Cancel"

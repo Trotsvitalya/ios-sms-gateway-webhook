@@ -128,9 +128,26 @@ public class GatewayEngine: ObservableObject {
         let escapedText = escapeJsonString(msg.text)
         let simSlot = msg.service
 
+        // Читабельні дата та час
+        let dateObj = Date(timeIntervalSince1970: Double(msg.dateTimestamp) / 1000.0)
+        let df = DateFormatter()
+        df.dateFormat = "dd.MM.yyyy"
+        let readableDate = df.string(from: dateObj)
+
+        let tf = DateFormatter()
+        tf.dateFormat = "HH:mm:ss"
+        let readableTime = tf.string(from: dateObj)
+
+        let dtf = DateFormatter()
+        dtf.dateFormat = "dd.MM.yyyy HH:mm:ss"
+        let readableDateTime = dtf.string(from: dateObj)
+
         var bodyString = rule.template
         bodyString = bodyString.replacingOccurrences(of: "%from%", with: escapedFrom)
         bodyString = bodyString.replacingOccurrences(of: "%text%", with: escapedText)
+        bodyString = bodyString.replacingOccurrences(of: "%time%", with: readableTime)
+        bodyString = bodyString.replacingOccurrences(of: "%date%", with: readableDate)
+        bodyString = bodyString.replacingOccurrences(of: "%datetime%", with: readableDateTime)
         bodyString = bodyString.replacingOccurrences(of: "%sentStamp%", with: String(msg.dateTimestamp))
         bodyString = bodyString.replacingOccurrences(of: "%receivedStamp%", with: String(nowMs))
         bodyString = bodyString.replacingOccurrences(of: "%sim%", with: simSlot)
