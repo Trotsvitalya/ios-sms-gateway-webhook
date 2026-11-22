@@ -11,19 +11,46 @@ public struct SMSMessage {
 
 public class DatabaseManager {
     public static let shared = DatabaseManager()
-    private let dbPath = "/var/mobile/Library/SMS/sms.db"
+
+    private var dbPath: String {
+        let candidates = [
+            "/var/mobile/Library/SMS/sms.db",
+            "/private/var/mobile/Library/SMS/sms.db"
+        ]
+        for path in candidates {
+            if FileManager.default.fileExists(atPath: path) {
+                return path
+            }
+        }
+        return "/var/mobile/Library/SMS/sms.db"
+    }
 
     private init() {}
 
-    /// Перевіряє чи доступна системна база даних SMS
+    /// Перевіряє чи доступна системна база даних SMS прямим тестовим SQL-запитом
     public func isDatabaseAccessible() -> Bool {
-        return FileManager.default.isReadableFile(atPath: dbPath)
+        let path = dbPath
+        var db: OpaquePointer?
+        guard sqlite3_open_v2(path, &db, SQLITE_OPEN_READONLY, nil) == SQLITE_OK else {
+            return false
+        }
+        defer { sqlite3_close(db) }
+
+        var statement: OpaquePointer?
+        let query = "SELECT COUNT(*) FROM message"
+        if sqlite3_prepare_v2(db, query, -1, &statement, nil) == SQLITE_OK {
+            sqlite3_finalize(statement)
+            return true
+        }
+        sqlite3_finalize(statement)
+        return false
     }
 
     /// Отримує максимальний існуючий ROWID
     public func fetchLatestRowId() -> Int64 {
+        let path = dbPath
         var db: OpaquePointer?
-        guard sqlite3_open_v2(dbPath, &db, SQLITE_OPEN_READONLY, nil) == SQLITE_OK else {
+        guard sqlite3_open_v2(path, &db, SQLITE_OPEN_READONLY, nil) == SQLITE_OK else {
             return 0
         }
         defer { sqlite3_close(db) }
@@ -44,9 +71,10 @@ public class DatabaseManager {
     /// Вибирає нові вхідні повідомлення з ROWID > afterRowId
     public func fetchNewMessages(afterRowId: Int64) -> [SMSMessage] {
         var messages: [SMSMessage] = []
+        let path = dbPath
         var db: OpaquePointer?
 
-        guard sqlite3_open_v2(dbPath, &db, SQLITE_OPEN_READONLY, nil) == SQLITE_OK else {
+        guard sqlite3_open_v2(path, &db, SQLITE_OPEN_READONLY, nil) == SQLITE_OK else {
             return []
         }
         defer { sqlite3_close(db) }
@@ -143,7 +171,6 @@ public class DatabaseManager {
         if let raw = String(data: data, encoding: .utf8) ?? String(data: data, encoding: .ascii) {
             if let range = raw.range(of: "NSString") {
                 let suffix = raw[range.upperBound...]
-                // Знаходимо фрагмент читабельного тексту
                 let parts = suffix.components(separatedBy: CharacterSet.controlCharacters)
                 for part in parts {
                     let cleaned = part.trimmingCharacters(in: .whitespacesAndNewlines)

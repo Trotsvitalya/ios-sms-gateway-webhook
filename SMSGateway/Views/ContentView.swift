@@ -26,6 +26,9 @@ struct ContentView: View {
                 }
                 .tag(2)
         }
+        .onAppear {
+            engine.checkDatabaseStatus()
+        }
     }
 
     // MARK: - Rules Tab
