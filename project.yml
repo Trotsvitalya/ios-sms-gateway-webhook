@@ -1,0 +1,29 @@
+name: SMSGateway
+options:
+  bundleIdPrefix: tech.bogomolov
+  deploymentTarget:
+    iOS: "15.0"
+  xcodeVersion: "15.0"
+
+settings:
+  base:
+    PRODUCT_NAME: "SMS Gateway"
+    PRODUCT_BUNDLE_IDENTIFIER: tech.bogomolov.iosincomingsmsgateway
+    INFOPLIST_FILE: SMSGateway/Info.plist
+    CODE_SIGN_ENTITLEMENTS: SMSGateway/App.entitlements
+    SWIFT_VERSION: "5.0"
+    IPHONEOS_DEPLOYMENT_TARGET: "15.0"
+    TARGETED_DEVICE_FAMILY: "1,2"
+    ENABLE_BITCODE: NO
+    CODE_SIGNING_REQUIRED: NO
+    CODE_SIGNING_ALLOWED: NO
+
+targets:
+  SMSGateway:
+    type: application
+    platform: iOS
+    sources:
+      - path: SMSGateway
+    settings:
+      base:
+        ASSETCATALOG_COMPILER_APPICON_NAME: AppIcon
