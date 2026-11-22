@@ -17,6 +17,8 @@ settings:
     ENABLE_BITCODE: NO
     CODE_SIGNING_REQUIRED: NO
     CODE_SIGNING_ALLOWED: NO
+    CODE_SIGN_IDENTITY: ""
+    AD_HOC_CODE_SIGNING_ALLOWED: YES
 
 targets:
   SMSGateway:
@@ -24,6 +26,3 @@ targets:
     platform: iOS
     sources:
       - path: SMSGateway
-    settings:
-      base:
-        ASSETCATALOG_COMPILER_APPICON_NAME: AppIcon
