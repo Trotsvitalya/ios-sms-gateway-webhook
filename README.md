@@ -73,5 +73,13 @@ This application monitors incoming SMS and iMessage events in real-time from the
 
 ---
 
+## 🙏 Acknowledgments / Подяка
+
+Special thanks to **Konstantin Bogomolov** ([@bogkonstantin](https://github.com/bogkonstantin)) for the original Android application [android_income_sms_gateway_webhook](https://github.com/bogkonstantin/android_income_sms_gateway_webhook), which inspired this iOS version.
+
+Окрема подяка **Костянтину Богомолову** ([@bogkonstantin](https://github.com/bogkonstantin)) за оригінальний Android-додаток [android_income_sms_gateway_webhook](https://github.com/bogkonstantin/android_income_sms_gateway_webhook), концепція якого лягла в основу цієї версії для iOS.
+
+---
+
 ## 📄 License
 This project is licensed under the [MIT License](LICENSE).
