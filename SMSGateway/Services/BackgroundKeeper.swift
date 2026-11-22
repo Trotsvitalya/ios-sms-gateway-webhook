@@ -32,7 +32,6 @@ public class BackgroundKeeper {
     }
 
     private func playSilentSound() {
-        // Генеруємо 1 секунду тиші у форматі WAV в пам'яті
         let wavData = createSilentWav()
         do {
             audioPlayer = try AVAudioPlayer(data: wavData)
@@ -60,44 +59,25 @@ public class BackgroundKeeper {
         }
     }
 
-    /// Створює 44-байтний заголовок та кілька мілісекунд тиші PCM WAV
+    /// Повертає валідний 44-байтний WAV файл (PCM 44.1kHz, 16-bit Mono) з 1 секундою тиші
     private func createSilentWav() -> Data {
-        var data = Data()
-        let sampleRate: Int32 = 44100
-        let channels: Int16 = 1
-        let bitsPerSample: Int16 = 16
-        let byteRate = sampleRate * Int32(channels) * Int32(bitsPerSample / 8)
-        let blockAlign = channels * (bitsPerSample / 8)
-        let durationSeconds = 1
-        let subchunk2Size = Int32(durationSeconds) * byteRate
-        let chunkSize = 36 + subchunk2Size
-
-        data.append("RIFF".data(using: .ascii)!)
-        var chunkSizeLE = chunkSize.littleEndian
-        data.append(Data(bytes: &chunkSizeLE, count: 4))
-        data.append("WAVE".data(using: .ascii)!)
-        data.append("fmt ".data(using: .ascii)!)
-        var subchunk1Size: Int32 = 16
-        data.append(Data(bytes: &subchunk1Size.littleEndian, count: 4))
-        var audioFormat: Int16 = 1
-        data.append(Data(bytes: &audioFormat.littleEndian, count: 2))
-        var numChannels = channels.littleEndian
-        data.append(Data(bytes: &numChannels, count: 2))
-        var sampleRateLE = sampleRate.littleEndian
-        data.append(Data(bytes: &sampleRateLE, count: 4))
-        var byteRateLE = byteRate.littleEndian
-        data.append(Data(bytes: &byteRateLE, count: 4))
-        var blockAlignLE = blockAlign.littleEndian
-        data.append(Data(bytes: &blockAlignLE, count: 2))
-        var bpsLE = bitsPerSample.littleEndian
-        data.append(Data(bytes: &bpsLE, count: 2))
-        data.append("data".data(using: .ascii)!)
-        var subchunk2SizeLE = subchunk2Size.littleEndian
-        data.append(Data(bytes: &subchunk2SizeLE, count: 4))
-
-        // Заповнюємо нулями (тиша)
-        let silence = [UInt8](repeating: 0, count: Int(subchunk2Size))
-        data.append(contentsOf: silence)
+        let header: [UInt8] = [
+            0x52, 0x49, 0x46, 0x46, // "RIFF"
+            0x24, 0x58, 0x01, 0x00, // Chunk size: 88236 bytes
+            0x57, 0x41, 0x56, 0x45, // "WAVE"
+            0x66, 0x6d, 0x74, 0x20, // "fmt "
+            0x10, 0x00, 0x00, 0x00, // Subchunk1Size (16 bytes)
+            0x01, 0x00,             // AudioFormat (1 = PCM)
+            0x01, 0x00,             // NumChannels (1 = Mono)
+            0x44, 0xac, 0x00, 0x00, // SampleRate (44100 Hz)
+            0x88, 0x58, 0x01, 0x00, // ByteRate (88200 B/s)
+            0x02, 0x00,             // BlockAlign (2 bytes)
+            0x10, 0x00,             // BitsPerSample (16 bits)
+            0x64, 0x61, 0x74, 0x61, // "data"
+            0x00, 0x58, 0x01, 0x00  // Subchunk2Size (88200 bytes)
+        ]
+        var data = Data(header)
+        data.append(Data(repeating: 0, count: 88200))
         return data
     }
 }
