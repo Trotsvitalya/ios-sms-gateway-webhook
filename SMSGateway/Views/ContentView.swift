@@ -190,6 +190,7 @@ struct ContentView: View {
                                 Text(log.status)
                                     .font(.caption2).bold()
                                     .foregroundColor(log.isSuccess ? .green : .red)
+                            }
                         }
                         .padding(.vertical, 2)
                     }
